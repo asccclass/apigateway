@@ -1,11 +1,5 @@
-### Sign up Server 報名報到系統 
+### API Gateway
+主要將所有的 API 服務集中由此提供，方便控管與 MCP 服務的介接。
 
-## 報導狀態
-
-* CSS
-
-```
-黃色：process
-綠色：pending
-完成：completed
-```
+## 現有服務
+### TODO
