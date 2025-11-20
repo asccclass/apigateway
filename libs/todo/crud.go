@@ -11,7 +11,7 @@ import(
 
 // 獲取所有 todo 項目 ID、CreateDate、Context、User、DueTime、IsFinish
 func(app *TodoService) GetTodosFromWeb (w http.ResponseWriter, r *http.Request) {
-   rows, err := app.DB.Query("SELECT id, createdate, context, user, duetime, isFinish FROM todo order by duetime")
+   rows, err := app.DB.Query("SELECT id, createdate, amount, title, context, user, duetime, isFinish FROM todo order by duetime")
    if err != nil {
       app.respondWithError(w, http.StatusInternalServerError, err.Error())
       return
@@ -21,7 +21,7 @@ func(app *TodoService) GetTodosFromWeb (w http.ResponseWriter, r *http.Request) 
    for rows.Next() {
       var t Todo
       var createDate, dueTime string
-      err := rows.Scan(&t.ID, &createDate, &t.Context, &t.User, &dueTime, &t.IsFinish)
+      err := rows.Scan(&t.ID, &createDate, &t.Amount, &t.Title, &t.Context, &t.User, &dueTime, &t.IsFinish)
       if err != nil {
          app.respondWithError(w, http.StatusInternalServerError, err.Error())
          return
@@ -44,8 +44,8 @@ func(app *TodoService) GetTodoFromWeb(w http.ResponseWriter, r *http.Request) {
 
    var t Todo
    var createDate, dueTime string
-   err := app.DB.QueryRow("SELECT id, createdate, context, user, duetime, isFinish FROM todo WHERE id = ?", id).
-         Scan(&t.ID, &createDate, &t.Context, &t.User, &dueTime, &t.IsFinish)
+   err := app.DB.QueryRow("SELECT id, createdate, amount, title, context, user, duetime, isFinish FROM todo WHERE id = ?", id).
+         Scan(&t.ID, createDate, &t.Amount, &t.Title, &t.Context, &t.User, &dueTime, &t.IsFinish)
 
    if err != nil {
       if err == sql.ErrNoRows {
@@ -79,7 +79,7 @@ func(app *TodoService) CreateTodoFromWeb(w http.ResponseWriter, r *http.Request)
       t.CreateDate = time.Now()
    }
    // 插入新記錄
-   stmt, err := app.DB.Prepare("INSERT INTO todo(createdate, context, user, duetime, isFinish) VALUES(?, ?, ?, ?, ?)")
+   stmt, err := app.DB.Prepare("INSERT INTO todo(amount, title, createdate, context, user, duetime, isFinish) VALUES(?,?,?,?,?,?,?)")
    if err != nil {
       app.respondWithError(w, http.StatusInternalServerError, err.Error())
       return
@@ -96,7 +96,7 @@ func(app *TodoService) CreateTodoFromWeb(w http.ResponseWriter, r *http.Request)
    }
 
    // result, err := stmt.Exec(t.CreateDate.Format(time.RFC3339), t.Context, t.User, t.DueTime.Format(time.RFC3339), t.IsFinish)
-   result, err := stmt.Exec(t.CreateDate.Format(time.RFC3339), t.Context, t.User, dt, t.IsFinish)
+   result, err := stmt.Exec(t.Amount, t.Title, t.CreateDate.Format(time.RFC3339), t.Context, t.User, dt, t.IsFinish)
    if err != nil {
       app.respondWithError(w, http.StatusInternalServerError, err.Error())
       return

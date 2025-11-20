@@ -11,11 +11,13 @@ import(
 // Todo 代表 todo 資料表中的一個項目
 type Todo struct {
    ID         int       `json:"id"`
-   CreateDate time.Time `json:"createdate"`
-   Context    string    `json:"context"`
+   CreateDate time.Time `json:"date"`
+   Amount	int	`json:"amount"` 
+   Title	string	`json:"title"`
+   Context    string    `json:"description"`
    User       string    `json:"user"`
    DueTime    string	`json:"duetime"`
-   IsFinish   string	`json:"isFinish"`
+   IsFinish   string	`json:"complete"`
 }
 
 // TodoUpdate 用於部分更新的結構體，使用指標類型

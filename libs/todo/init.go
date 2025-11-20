@@ -35,6 +35,8 @@ func(app *TodoService) InitialDB()(error) {
     CREATE TABLE IF NOT EXISTS todo (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         createdate DATETIME,
+	amount INTEGER,
+	title TEXT,
         context TEXT,
         user TEXT,
         duetime DATETIME,
